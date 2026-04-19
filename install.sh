@@ -44,8 +44,7 @@ fi
 
 # ── 2. Téléchargement ─────────────────────────────────────
 print_status "Downloading EbroStream from GitHub..."
-wget -O /tmp/EbroStream.tar.gz \
-  https://github.com/ilyasM6/EboStream/raw/refs/heads/main/EboStream.tar.gz
+wget -O /tmp/EbroStream.tar.gz \https://github.com/Said-Pro/EbroStream/raw/refs/heads/main/EbroStream.tar.gz
 
 if [ $? -ne 0 ] || [ ! -s /tmp/EbroStream.tar.gz ]; then
     print_error "Download failed or file is empty!"
