@@ -120,7 +120,7 @@ print_box() {
 
 clear
 
-# Bannière principale
+# Bannière principale avec EBROSTREAM en majuscules
 echo -e "${BOLD_CYAN}"
 echo "╔════════════════════════════════════════════════════════════════════╗"
 echo "║                                                                    ║"
@@ -132,7 +132,7 @@ echo -e "║  ${BOLD_PURPLE}███████╗██║  ██║██�
 echo -e "║  ${BOLD_PURPLE}╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝${BOLD_CYAN}  ║"
 echo "║                                                                    ║"
 echo -e "║              ${BOLD_YELLOW}══════════════════════════════════════${BOLD_CYAN}              ║"
-echo -e "║              ${BOLD_WHITE}Streaming Plugin for Enigma2${BOLD_CYAN}                   ║"
+echo -e "║              ${BOLD_WHITE}${BOLD_RED}EBROSTREAM${BOLD_WHITE} - Streaming Plugin for Enigma2${BOLD_CYAN}        ║"
 echo "║                                                                    ║"
 echo "╠════════════════════════════════════════════════════════════════════╣"
 echo -e "║  ${BOLD_GREEN}Developer:${NC} ${BOLD_WHITE}Said-Pro${NC}                                              ${BOLD_CYAN}║"
@@ -143,10 +143,10 @@ echo "╚═══════════════════════�
 echo -e "${NC}"
 
 # Animation de démarrage
-loading_animation "Initializing installer" 2
+loading_animation "Initializing EBROSTREAM installer" 2
 
 echo ""
-print_decorative "🚀 Starting installation process"
+print_decorative "🚀 Starting installation process for EBROSTREAM"
 echo ""
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -180,7 +180,7 @@ echo ""
 # ═══════════════════════════════════════════════════════════════════════════
 
 print_step "2/8"
-print_header_section "📥 Downloading Plugin"
+print_header_section "📥 Downloading EBROSTREAM"
 
 print_status "Fetching latest version from GitHub..."
 echo -e "${DIM}  └─ Source: https://github.com/Said-Pro/EbroStream${NC}"
@@ -205,7 +205,7 @@ if [ -z "$FILE_SIZE" ]; then
     FILE_SIZE="unknown"
 fi
 
-print_success "Download completed successfully"
+print_success "EBROSTREAM downloaded successfully"
 echo -e "${GREEN}  └─ File size: ${BOLD_WHITE}$FILE_SIZE${NC}"
 echo ""
 
@@ -336,7 +336,7 @@ echo ""
 print_step "5/8"
 print_header_section "✅ Content Validation"
 
-print_status "Verifying plugin content..."
+print_status "Verifying EBROSTREAM content..."
 if [ ! -d "/tmp/EbroStream" ] || [ -z "$(ls -A /tmp/EbroStream)" ]; then
     print_error "Plugin folder is empty!"
     exit 1
@@ -350,7 +350,7 @@ else
     echo -e "${YELLOW}  └─⚠ No standard plugin file found (may be normal)${NC}"
 fi
 
-print_success "Plugin content verified"
+print_success "EBROSTREAM content verified"
 echo ""
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -383,7 +383,7 @@ if [ -d "$DEST/EbroStream" ]; then
 fi
 
 # Installation du nouveau plugin
-print_status "Installing new version..."
+print_status "Installing EBROSTREAM..."
 loading_animation "Copying files" 1
 mv "/tmp/EbroStream" "$DEST/"
 
@@ -397,7 +397,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-print_success "Plugin installed successfully!"
+print_success "EBROSTREAM installed successfully!"
 echo -e "${GREEN}  └─ Location: ${BOLD_WHITE}$DEST/EbroStream${NC}"
 echo ""
 
@@ -423,7 +423,7 @@ print_step "8/8"
 print_header_section "🔄 System Restart"
 
 echo ""
-print_box "EbroStream" "Plugin successfully installed! Enjoy streaming ✨"
+print_box "EBROSTREAM" "Plugin successfully installed! Enjoy streaming ✨"
 echo ""
 
 print_warning "The receiver will restart to apply changes"
@@ -463,7 +463,7 @@ echo "║              ✅ INSTALLATION COMPLETED SUCCESSFULLY ✅              
 echo "║                                                                    ║"
 echo "╠════════════════════════════════════════════════════════════════════╣"
 echo "║                                                                    ║"
-echo -e "║  ${BOLD_YELLOW}✨ EbroStream is now installed and active${NC}                        ${BOLD_GREEN}║"
+echo -e "║  ${BOLD_YELLOW}✨ EBROSTREAM is now installed and active${NC}                         ${BOLD_GREEN}║"
 echo -e "║  ${BOLD_CYAN}📺 Access the plugin from your Enigma2 menu${NC}                       ${BOLD_GREEN}║"
 echo "║                                                                    ║"
 echo -e "║  ${BOLD_WHITE}Developer: ${BOLD_PURPLE}Said-Pro${NC}                                                ${BOLD_GREEN}║"
@@ -474,5 +474,5 @@ echo "║                                                                    ║
 echo "╚════════════════════════════════════════════════════════════════════╝"
 echo -e "${NC}"
 
-print_success "Thank you for installing EbroStream!"
+print_success "Thank you for installing EBROSTREAM!"
 echo ""
