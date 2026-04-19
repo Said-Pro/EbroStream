@@ -42,34 +42,46 @@ print_step() { echo -e "\n${BOLD_CYAN}┌─────────────
 print_decorative() { echo -e "${BOLD_PURPLE}✦ $1 ✦${NC}"; }
 print_header_section() { echo -e "\n${BOLD_WHITE}${UNDERLINE}$1${NC}"; }
 
-# Barre de progression améliorée avec couleurs
+# Barre de progression compatible BusyBox
 progress_bar() {
     local duration=${1}
-    local bars=30
-    local sleep_interval=$(echo "scale=3; $duration/$bars" | bc 2>/dev/null || echo "0.1")
+    local bars=20
+    local sleep_interval=$(echo "scale=2; $duration/$bars" | bc 2>/dev/null || echo "0.15")
+    local i=0
     
-    for ((i=0; i<=bars; i++)); do
+    while [ $i -le $bars ]; do
         printf "\r${BOLD_CYAN}["
-        for ((j=0; j<i; j++)); do printf "${GREEN}█${NC}"; done
-        for ((j=i; j<bars; j++)); do printf "${DIM}░${NC}"; done
-        printf "] ${BOLD_YELLOW}%3d%%${NC}" $((i*100/bars))
+        j=0
+        while [ $j -lt $i ]; do
+            printf "${GREEN}█${NC}"
+            j=$((j + 1))
+        done
+        while [ $j -lt $bars ]; do
+            printf "${DIM}░${NC}"
+            j=$((j + 1))
+        done
+        printf "] ${BOLD_YELLOW}%3d%%${NC}" $((i * 100 / bars))
+        i=$((i + 1))
         sleep $sleep_interval
     done
     printf "\n"
 }
 
-# Animation de chargement
+# Animation de chargement compatible BusyBox
 loading_animation() {
     local text="$1"
     local duration="$2"
-    local chars="/-\\|"
-    local end=$((SECONDS + duration))
+    local chars="/ - \\ |"
+    local end_time=$(($(date +%s) + duration))
+    local i=0
     
-    while [ $SECONDS -lt $end ]; do
-        for ((i=0; i<${#chars}; i++)); do
-            printf "\r${CYAN}${chars:$i:1}${NC} ${BOLD_WHITE}${text}${NC}"
-            sleep 0.1
-        done
+    while [ $(date +%s) -lt $end_time ]; do
+        printf "\r${CYAN}${chars:$i:1}${NC} ${BOLD_WHITE}${text}${NC}"
+        i=$((i + 2))
+        if [ $i -ge ${#chars} ]; then
+            i=0
+        fi
+        sleep 0.1
     done
     printf "\r${GREEN}✓${NC} ${BOLD_GREEN}${text}${NC} ${GREEN}✓${NC}\n"
 }
@@ -79,11 +91,24 @@ print_box() {
     local title="$1"
     local content="$2"
     local width=50
-    local title_len=${#title}
+    local title_len=$(echo -n "$title" | wc -c)
     local padding=$(( (width - title_len - 4) / 2 ))
+    local pad_left=""
+    local pad_right=""
+    local i=0
+    
+    while [ $i -lt $padding ]; do
+        pad_left="${pad_left} "
+        i=$((i + 1))
+    done
+    i=0
+    while [ $i -lt $padding ]; do
+        pad_right="${pad_right} "
+        i=$((i + 1))
+    done
     
     echo -e "${BOLD_CYAN}┌──────────────────────────────────────────────────┐${NC}"
-    printf "${BOLD_CYAN}│${NC}${BOLD_WHITE}%*s${BOLD_YELLOW} %s ${BOLD_WHITE}%*s${NC}${BOLD_CYAN}│${NC}\n" $padding "" "$title" $padding ""
+    printf "${BOLD_CYAN}│${NC}${BOLD_WHITE}%s${BOLD_YELLOW} %s ${BOLD_WHITE}%s${NC}${BOLD_CYAN}│${NC}\n" "$pad_left" "$title" "$pad_right"
     echo -e "${BOLD_CYAN}├──────────────────────────────────────────────────┤${NC}"
     echo -e "${BOLD_CYAN}│${NC}  ${WHITE}$content${NC}  ${BOLD_CYAN}│${NC}"
     echo -e "${BOLD_CYAN}└──────────────────────────────────────────────────┘${NC}"
@@ -110,7 +135,7 @@ echo -e "║              ${BOLD_YELLOW}═════════════�
 echo -e "║              ${BOLD_WHITE}Streaming Plugin for Enigma2${BOLD_CYAN}                   ║"
 echo "║                                                                    ║"
 echo "╠════════════════════════════════════════════════════════════════════╣"
-echo -e "║  ${BOLD_GREEN}Developer:${NC} ${BOLD_WHITE}Said-MS${NC}                                              ${BOLD_CYAN}║"
+echo -e "║  ${BOLD_GREEN}Developer:${NC} ${BOLD_WHITE}Said-Pro${NC}                                              ${BOLD_CYAN}║"
 echo -e "║  ${BOLD_GREEN}Version:${NC}   ${BOLD_YELLOW}1.0${NC}                                                  ${BOLD_CYAN}║"
 echo -e "║  ${BOLD_GREEN}License:${NC}   ${WHITE}MIT${NC}                                                    ${BOLD_CYAN}║"
 echo -e "║  ${BOLD_GREEN}GitHub:${NC}    ${UNDERLINE}https://github.com/Said-Pro/EbroStream${NC}${BOLD_CYAN}         ║"
@@ -137,7 +162,10 @@ loading_animation "Testing connection to GitHub" 1
 if ping -c 2 github.com >/dev/null 2>&1; then
     echo -e "${GREEN}  └─✅ Connection successful${NC}"
     echo -e "${GREEN}  └─✅ DNS resolution: OK${NC}"
-    echo -e "${GREEN}  └─✅ Network latency: $(ping -c 1 github.com | grep 'time=' | cut -d'=' -f4 | cut -d' ' -f1)${NC}"
+    PING_TIME=$(ping -c 1 github.com 2>/dev/null | grep 'time=' | cut -d'=' -f4 | cut -d' ' -f1)
+    if [ -n "$PING_TIME" ]; then
+        echo -e "${GREEN}  └─✅ Network latency: ${PING_TIME}${NC}"
+    fi
     print_success "Internet connection is available"
 else
     print_error "No internet connection detected!"
@@ -158,12 +186,9 @@ print_status "Fetching latest version from GitHub..."
 echo -e "${DIM}  └─ Source: https://github.com/Said-Pro/EbroStream${NC}"
 echo ""
 
-# Afficher la progression du téléchargement
-wget -O /tmp/EbroStream.tar.gz https://github.com/Said-Pro/EbroStream/raw/refs/heads/main/EbroStream.tar.gz 2>&1 | \
-    sed -u 's/.* \([0-9]\+%\)\s\+\([0-9.]\+.\)/\1 - \2/' | \
-    while read line; do
-        echo -ne "\r${CYAN}  └─ Downloading: ${BOLD_YELLOW}$line${NC}    "
-    done
+# Téléchargement simple sans sed (compatible BusyBox)
+print_status "Downloading file..."
+wget -O /tmp/EbroStream.tar.gz https://github.com/Said-Pro/EbroStream/raw/refs/heads/main/EbroStream.tar.gz 2>&1
 
 if [ $? -ne 0 ] || [ ! -s /tmp/EbroStream.tar.gz ]; then
     echo ""
@@ -171,8 +196,15 @@ if [ $? -ne 0 ] || [ ! -s /tmp/EbroStream.tar.gz ]; then
     exit 1
 fi
 
-echo ""
-FILE_SIZE=$(du -h /tmp/EbroStream.tar.gz | cut -f1)
+# Afficher la taille du fichier
+FILE_SIZE=$(ls -lh /tmp/EbroStream.tar.gz 2>/dev/null | awk '{print $5}')
+if [ -z "$FILE_SIZE" ]; then
+    FILE_SIZE=$(du -h /tmp/EbroStream.tar.gz 2>/dev/null | cut -f1)
+fi
+if [ -z "$FILE_SIZE" ]; then
+    FILE_SIZE="unknown"
+fi
+
 print_success "Download completed successfully"
 echo -e "${GREEN}  └─ File size: ${BOLD_WHITE}$FILE_SIZE${NC}"
 echo ""
@@ -216,19 +248,45 @@ EXTRACTED=""
 cd /tmp
 
 # Chercher un dossier contenant EbroStream
-EXTRACTED=$(find /tmp -maxdepth 1 -type d -name "*EbroStream*" ! -path /tmp | head -n 1)
+for dir in /tmp/*EbroStream*; do
+    if [ -d "$dir" ] && [ "$dir" != "/tmp/*EbroStream*" ]; then
+        EXTRACTED="$dir"
+        break
+    fi
+done
 
 # Si aucun dossier trouvé, chercher des fichiers extraits
 if [ -z "$EXTRACTED" ]; then
     print_warning "No folder found, checking for extracted files..."
     
     # Vérifier si des fichiers ont été extraits directement
-    if [ "$(ls -A /tmp | grep -v "EbroStream.tar.gz" | head -1)" ]; then
+    FILE_COUNT=0
+    for item in /tmp/*; do
+        case "$item" in
+            */EbroStream.tar.gz) ;;
+            */EbroStream) ;;
+            *) 
+                if [ -e "$item" ]; then
+                    FILE_COUNT=$((FILE_COUNT + 1))
+                fi
+                ;;
+        esac
+    done
+    
+    if [ $FILE_COUNT -gt 0 ]; then
         print_status "Files extracted directly, creating folder structure..."
         mkdir -p /tmp/EbroStream
         # Déplacer tous les fichiers/dossiers extraits (sauf l'archive)
-        for item in $(ls -A /tmp | grep -v "EbroStream.tar.gz"); do
-            mv "/tmp/$item" "/tmp/EbroStream/" 2>/dev/null
+        for item in /tmp/*; do
+            case "$item" in
+                */EbroStream.tar.gz) ;;
+                */EbroStream) ;;
+                *)
+                    if [ -e "$item" ]; then
+                        mv "$item" /tmp/EbroStream/ 2>/dev/null
+                    fi
+                    ;;
+            esac
         done
         EXTRACTED="/tmp/EbroStream"
     fi
@@ -239,7 +297,7 @@ if [ -z "$EXTRACTED" ]; then
     print_warning "Attempting alternative extraction method..."
     mkdir -p /tmp/EbroStream
     tar -xzf EbroStream.tar.gz -C /tmp/EbroStream --strip-components=1 2>/dev/null
-    if [ $? -eq 0 ] && [ "$(ls -A /tmp/EbroStream 2>/dev/null)" ]; then
+    if [ $? -eq 0 ] && [ -n "$(ls -A /tmp/EbroStream 2>/dev/null)" ]; then
         EXTRACTED="/tmp/EbroStream"
     fi
 fi
@@ -247,7 +305,7 @@ fi
 if [ -z "$EXTRACTED" ]; then
     print_error "Could not find extracted content in /tmp!"
     print_error "Archive content preview:"
-    tar -tzf EbroStream.tar.gz | head -5
+    tar -tzf EbroStream.tar.gz 2>/dev/null | head -5
     exit 1
 fi
 
@@ -286,17 +344,11 @@ fi
 
 # Vérifier les fichiers essentiels
 print_status "Checking essential files..."
-ESSENTIAL_FILES=0
 if [ -f "/tmp/EbroStream/plugin.py" ] || [ -f "/tmp/EbroStream/__init__.py" ]; then
     echo -e "${GREEN}  └─✅ Plugin entry point found${NC}"
-    ESSENTIAL_FILES=$((ESSENTIAL_FILES + 1))
 else
     echo -e "${YELLOW}  └─⚠ No standard plugin file found (may be normal)${NC}"
 fi
-
-# Afficher la structure
-print_status "Plugin structure:"
-echo -e "${DIM}  └─ $(ls -la /tmp/EbroStream | head -5 | tail -4 | sed 's/^/     /')${NC}"
 
 print_success "Plugin content verified"
 echo ""
@@ -414,7 +466,7 @@ echo "║                                                                    ║
 echo -e "║  ${BOLD_YELLOW}✨ EbroStream is now installed and active${NC}                        ${BOLD_GREEN}║"
 echo -e "║  ${BOLD_CYAN}📺 Access the plugin from your Enigma2 menu${NC}                       ${BOLD_GREEN}║"
 echo "║                                                                    ║"
-echo -e "║  ${BOLD_WHITE}Developer: ${BOLD_PURPLE}Said-MS${NC}                                                ${BOLD_GREEN}║"
+echo -e "║  ${BOLD_WHITE}Developer: ${BOLD_PURPLE}Said-Pro${NC}                                                ${BOLD_GREEN}║"
 echo -e "║  ${BOLD_WHITE}Version:   ${BOLD_YELLOW}1.0${NC}                                                    ${BOLD_GREEN}║"
 echo "║                                                                    ║"
 echo -e "║  ${BOLD_BLUE}🐛 Report issues: ${UNDERLINE}https://github.com/Said-Pro/EbroStream/issues${NC}${BOLD_GREEN}  ║"
