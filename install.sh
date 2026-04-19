@@ -120,7 +120,7 @@ print_box() {
 
 clear
 
-# Bannière principale avec EBROSTREAM en majuscules
+# Bannière principale avec EBROSTREAM corrigé
 echo -e "${BOLD_CYAN}"
 echo "╔════════════════════════════════════════════════════════════════════╗"
 echo "║                                                                    ║"
@@ -131,8 +131,8 @@ echo -e "║  ${BOLD_PURPLE}██╔══╝  ██╔══██╗██�
 echo -e "║  ${BOLD_PURPLE}███████╗██║  ██║██║  ██║╚██████╔╝███████║   ██║   ██║  ██║███████║██║  ██║██║ ╚═╝ ██║${BOLD_CYAN}  ║"
 echo -e "║  ${BOLD_PURPLE}╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝${BOLD_CYAN}  ║"
 echo "║                                                                    ║"
-echo -e "║              ${BOLD_YELLOW}══════════════════════════════════════${BOLD_CYAN}              ║"
-echo -e "║              ${BOLD_WHITE}${BOLD_RED}EBROSTREAM${BOLD_WHITE} - Streaming Plugin for Enigma2${BOLD_CYAN}        ║"
+echo -e "║                   ${BOLD_YELLOW}══════════════════════════════${BOLD_CYAN}                      ║"
+echo -e "║              ${BOLD_RED}E B R O S T R E A M${NC}${BOLD_WHITE} - Streaming Plugin for Enigma2${BOLD_CYAN}        ║"
 echo "║                                                                    ║"
 echo "╠════════════════════════════════════════════════════════════════════╣"
 echo -e "║  ${BOLD_GREEN}Developer:${NC} ${BOLD_WHITE}Said-Pro${NC}                                              ${BOLD_CYAN}║"
