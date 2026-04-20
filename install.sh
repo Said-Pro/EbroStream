@@ -17,7 +17,7 @@ NC='\033[0m' # No Color
 
 # Couleurs en gras
 BOLD_RED='\033[1;31m'
-BOLD_GREEN='\033[1;32m'
+BOLD_RED='\033[1;32m'
 BOLD_YELLOW='\033[1;33m'
 BOLD_BLUE='\033[1;34m'
 BOLD_PURPLE='\033[1;35m'
@@ -35,7 +35,7 @@ DIM='\033[2m'
 # ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
 
 print_status() { echo -e "${CYAN}▶${NC} ${BOLD_BLUE}INFO:${NC} $1"; }
-print_success() { echo -e "${GREEN}✓${NC} ${BOLD_GREEN}SUCCESS:${NC} $1"; }
+print_success() { echo -e "${GREEN}✓${NC} ${BOLD_RED}SUCCESS:${NC} $1"; }
 print_error() { echo -e "${RED}✗${NC} ${BOLD_RED}ERROR:${NC} $1"; }
 print_warning() { echo -e "${YELLOW}⚠${NC} ${BOLD_YELLOW}WARNING:${NC} $1"; }
 print_step() { echo -e "\n${BOLD_CYAN}┌────────────────────────────────────────────────────────┐${NC}"; echo -e "${BOLD_CYAN}│ ${WHITE}STEP $1${NC}"; echo -e "${BOLD_CYAN}└────────────────────────────────────────────────────────┘${NC}"; }
@@ -83,7 +83,7 @@ loading_animation() {
         fi
         sleep 0.1
     done
-    printf "\r${GREEN}✓${NC} ${BOLD_GREEN}${text}${NC} ${GREEN}✓${NC}\n"
+    printf "\r${GREEN}✓${NC} ${BOLD_RED}${text}${NC} ${GREEN}✓${NC}\n"
 }
 
 # Afficher un cadre décoratif
@@ -124,21 +124,21 @@ clear
 echo -e "${BOLD_CYAN}"
 echo "╔═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗"
 echo "║                                                                                                                       ║"
-echo -e "║  ${BOLD_GREEN}███████╗██████╗ ██████╗  ██████╗ ███████╗████████╗██████╗ ███████╗ █████╗ ███╗   ███╗${BOLD_CYAN}   ║"
-echo -e "║  ${BOLD_GREEN}██╔════╝██╔══██╗██╔══██╗██╔═══██╗██╔════╝╚══██╔══╝██╔══██╗██╔════╝██╔══██╗████╗ ████║${BOLD_CYAN}   ║"
-echo -e "║  ${BOLD_GREEN}█████╗  ██████╔╝██████╔╝██║   ██║███████╗   ██║   ██████╔╝███████╗███████║██╔████╔██║${BOLD_CYAN}   ║"
-echo -e "║  ${BOLD_GREEN}██╔══╝  ██╔══██╗██╔══██╗██║   ██║╚════██║   ██║   ██╔══██╗██║═══  ██╔══██║██║╚██╔╝██║${BOLD_CYAN}   ║"
-echo -e "║  ${BOLD_GREEN}███████╗███████║██║  ██║╚██████╔╝███████║   ██║   ██║  ██║███████║██║  ██║██║ ╚═╝ ██║${BOLD_CYAN}   ║"
-echo -e "║  ${BOLD_GREEN}╚══════╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝${BOLD_CYAN}   ║"
+echo -e "║  ${BOLD_RED}███████╗██████╗ ██████╗  ██████╗ ███████╗████████╗██████╗ ███████╗ █████╗ ███╗   ███╗${BOLD_CYAN}   ║"
+echo -e "║  ${BOLD_RED}██╔════╝██╔══██╗██╔══██╗██╔═══██╗██╔════╝╚══██╔══╝██╔══██╗██╔════╝██╔══██╗████╗ ████║${BOLD_CYAN}   ║"
+echo -e "║  ${BOLD_RED}█████╗  ██████╔╝██████╔╝██║   ██║███████╗   ██║   ██████╔╝███████╗███████║██╔████╔██║${BOLD_CYAN}   ║"
+echo -e "║  ${BOLD_RED}██╔══╝  ██╔══██╗██╔══██╗██║   ██║╚════██║   ██║   ██╔══██╗██║═══  ██╔══██║██║╚██╔╝██║${BOLD_CYAN}   ║"
+echo -e "║  ${BOLD_RED}███████╗███████║██║  ██║╚██████╔╝███████║   ██║   ██║  ██║███████║██║  ██║██║ ╚═╝ ██║${BOLD_CYAN}   ║"
+echo -e "║  ${BOLD_RED}╚══════╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝${BOLD_CYAN}   ║"
 echo "║                                                                                                                       ║"
 echo -e "║                              ${BOLD_YELLOW}══════════════════════════════${BOLD_CYAN}                              ║"
 echo -e "║              ${BOLD_RED}E B R O S T R E A M${NC}${BOLD_WHITE} - Streaming Plugin for Enigma2${BOLD_CYAN}           ║"
 echo "║                                                                                                                       ║"
 echo "╠═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣"
-echo -e "║  ${BOLD_GREEN}Developer:${NC} ${BOLD_WHITE}Said-MS${NC}                                               ${BOLD_CYAN} ║"
-echo -e "║  ${BOLD_GREEN}Version:${NC}   ${BOLD_YELLOW}1.0${NC}                                                  ${BOLD_CYAN} ║"
-echo -e "║  ${BOLD_GREEN}License:${NC}   ${WHITE}MIT${NC}                                                    ${BOLD_CYAN}     ║"
-echo -e "║  ${BOLD_GREEN}GitHub:${NC}    ${UNDERLINE}https://github.com/Said-Pro/EbroStream${NC}${BOLD_CYAN}                  ║"
+echo -e "║  ${BOLD_RED}Developer:${NC} ${BOLD_WHITE}Said-MS${NC}                                               ${BOLD_CYAN} ║"
+echo -e "║  ${BOLD_RED}Version:${NC}   ${BOLD_YELLOW}1.0${NC}                                                  ${BOLD_CYAN} ║"
+echo -e "║  ${BOLD_RED}License:${NC}   ${WHITE}MIT${NC}                                                    ${BOLD_CYAN}     ║"
+echo -e "║  ${BOLD_RED}GitHub:${NC}    ${UNDERLINE}https://github.com/Said-Pro/EbroStream${NC}${BOLD_CYAN}                  ║"
 echo "╚═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝"
 echo -e "${NC}"
 
