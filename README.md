@@ -10,4 +10,4 @@ wget -q "--no-check-certificate" https://raw.githubusercontent.com/Said-Pro/Ebro
 
 
 
-ebrostream_update_v4.2.0
+https://github.com/Said-Pro/EbroStream/raw/refs/heads/main/EbroStream_update_v4.2.0.zip
