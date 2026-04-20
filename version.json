@@ -1,31 +1,12 @@
-{
-    "version": "4.2.1",
-    "min_version": "4.0.0",
-    "release_date": "2026-04-21",
-    "download_url": "https://github.com/Said-Pro/EbroStream/releases/download/v4.2.1/ebrostream_update_v4.2.1.zip",
-    "changelog": [
-        "✅ Correction de la structure des dossiers (images dans skins/)",
-        "✅ Interface web fonctionnelle",
-        "✅ Bouton UPDATE dans l'interface principale"
-    ],
-    "files": [
-        "__init__.py",
-        "main.py",
-        "live.py",
-        "vod.py",
-        "series.py",
-        "servers_list.py",
-        "server_manager.py",
-        "stalker_servers.py",
-        "xtream_servers.py",
-        "settings.py",
-        "SettingsScreen.py",
-        "settings_menu.py",
-        "tools.py",
-        "updater.py",
-        "version.json",
-        "plugin.py",
-        "skins/",
-        "web/"
-    ]
-}
+# 1. Créer le ZIP pour la version 4.2.1
+cd /usr/lib/enigma2/python/Plugins/Extensions
+zip -r ebrostream_update_v4.2.1.zip EbroStream/
+
+# 2. Créer la release sur GitHub
+gh release create v4.2.1 \
+    --repo Said-Pro/EbroStream \
+    --title "Version 4.2.1" \
+    --notes "✅ Correction structure dossiers
+✅ Interface web fonctionnelle
+✅ Bouton UPDATE" \
+    ebrostream_update_v4.2.1.zip
