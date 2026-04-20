@@ -1,0 +1,13 @@
+{
+    "version": "4.1.0",           // Nouvelle version (incrémentée)
+    "release_date": "2026-04-20", // Date de publication
+    "size": "2.5 MB",              // Taille approximative
+    "requires_restart": true,      // Redémarrage nécessaire ?
+    "changelog": [                 // Liste des changements
+        "Ajout du support du format m3u",
+        "Correction du bug de lecture VOD",
+        "Amélioration des performances du cache"
+    ],
+    "min_version": "4.0.0",        // Version minimale requise
+    "download_url": "https://github.com/votre-username/EbroStream/archive/refs/heads/main.zip"
+}
