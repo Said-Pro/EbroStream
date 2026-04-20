@@ -17,7 +17,7 @@ NC='\033[0m' # No Color
 
 # Couleurs en gras
 BOLD_RED='\033[1;31m'
-BOLD_RED='\033[1;32m'
+BOLD_GREEN='\033[1;32m'
 BOLD_YELLOW='\033[1;33m'
 BOLD_BLUE='\033[1;34m'
 BOLD_PURPLE='\033[1;35m'
@@ -35,7 +35,7 @@ DIM='\033[2m'
 # ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
 
 print_status() { echo -e "${CYAN}▶${NC} ${BOLD_BLUE}INFO:${NC} $1"; }
-print_success() { echo -e "${GREEN}✓${NC} ${BOLD_RED}SUCCESS:${NC} $1"; }
+print_success() { echo -e "${GREEN}✓${NC} ${BOLD_GREEN}SUCCESS:${NC} $1"; }
 print_error() { echo -e "${RED}✗${NC} ${BOLD_RED}ERROR:${NC} $1"; }
 print_warning() { echo -e "${YELLOW}⚠${NC} ${BOLD_YELLOW}WARNING:${NC} $1"; }
 print_step() { echo -e "\n${BOLD_CYAN}┌────────────────────────────────────────────────────────┐${NC}"; echo -e "${BOLD_CYAN}│ ${WHITE}STEP $1${NC}"; echo -e "${BOLD_CYAN}└────────────────────────────────────────────────────────┘${NC}"; }
@@ -83,7 +83,7 @@ loading_animation() {
         fi
         sleep 0.1
     done
-    printf "\r${GREEN}✓${NC} ${BOLD_RED}${text}${NC} ${GREEN}✓${NC}\n"
+    printf "\r${GREEN}✓${NC} ${BOLD_GREEN}${text}${NC} ${GREEN}✓${NC}\n"
 }
 
 # Afficher un cadre décoratif
@@ -120,16 +120,16 @@ print_box() {
 
 clear
 
-# Bannière principale avec EBROSTREAM corrigé
+# Bannière principale
 echo -e "${BOLD_CYAN}"
 echo "╔═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗"
 echo "║                                                                                                                       ║"
-echo -e "║  ${BOLD_RED}███████╗██████╗ ██████╗  ██████╗ ███████╗████████╗██████╗ ███████╗ █████╗ ███╗   ███╗${BOLD_CYAN}   ║"
-echo -e "║  ${BOLD_RED}██╔════╝██╔══██╗██╔══██╗██╔═══██╗██╔════╝╚══██╔══╝██╔══██╗██╔════╝██╔══██╗████╗ ████║${BOLD_CYAN}   ║"
-echo -e "║  ${BOLD_RED}█████╗  ██████╔╝██████╔╝██║   ██║███████╗   ██║   ██████╔╝███████╗███████║██╔████╔██║${BOLD_CYAN}   ║"
-echo -e "║  ${BOLD_RED}██╔══╝  ██╔══██╗██╔══██╗██║   ██║╚════██║   ██║   ██╔══██╗██║═══  ██╔══██║██║╚██╔╝██║${BOLD_CYAN}   ║"
-echo -e "║  ${BOLD_RED}███████╗███████║██║  ██║╚██████╔╝███████║   ██║   ██║  ██║███████║██║  ██║██║ ╚═╝ ██║${BOLD_CYAN}   ║"
-echo -e "║  ${BOLD_RED}╚══════╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝${BOLD_CYAN}   ║"
+echo -e "║  ${BOLD_RED}  ███████╗██████╗ ██████╗  ██████╗ ███████╗████████╗██████╗ ███████╗ █████╗ ███╗   ███╗${BOLD_CYAN}   ║"
+echo -e "║  ${BOLD_GREEN}██╔════╝██╔══██╗██╔══██╗██╔═══██╗██╔════╝╚══██╔══╝██╔══██╗██╔════╝██╔══██╗████╗ ████║${BOLD_CYAN}   ║"
+echo -e "║  ${BOLD_RED}  █████╗  ██████╔╝██████╔╝██║   ██║███████╗   ██║   ██████╔╝███████╗███████║██╔████╔██║${BOLD_CYAN}   ║"
+echo -e "║  ${BOLD_GREEN}██╔══╝  ██╔══██╗██╔══██╗██║   ██║╚════██║   ██║   ██╔══██╗██╔═══  ██╔══██║██║╚██╔╝██║${BOLD_CYAN}   ║"
+echo -e "║  ${BOLD_RED}  ███████╗███████║██║  ██║╚██████╔╝███████║   ██║   ██║  ██║███████║██║  ██║██║ ╚═╝ ██║${BOLD_CYAN}   ║"
+echo -e "║  ${BOLD_GREEN}╚══════╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝${BOLD_CYAN}   ║"
 echo "║                                                                                                                       ║"
 echo -e "║                              ${BOLD_YELLOW}══════════════════════════════${BOLD_CYAN}                              ║"
 echo -e "║              ${BOLD_RED}E B R O S T R E A M${NC}${BOLD_WHITE} - Streaming Plugin for Enigma2${BOLD_CYAN}           ║"
@@ -373,13 +373,43 @@ fi
 mkdir -p "$DEST"
 echo -e "${GREEN}  └─✅ Destination directory ready${NC}"
 
-# Sauvegarde de l'ancienne version si elle existe
+# ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+# MODIFICATION IMPORTANTE: Sauvegarde dans /etc/enigma2 au lieu du dossier plugin
+# ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+
+# Sauvegarde de l'ancienne version si elle existe (dans /etc/enigma2)
 if [ -d "$DEST/EbroStream" ]; then
     print_warning "Previous installation detected!"
-    BACKUP_DIR="$DEST/EbroStream.bak.$(date +%Y%m%d_%H%M%S)"
-    print_status "Creating backup..."
-    mv "$DEST/EbroStream" "$BACKUP_DIR"
-    echo -e "${GREEN}  └─ Backup saved to: ${BOLD_WHITE}$BACKUP_DIR${NC}"
+    
+    # Dossier de backup dans /etc/enigma2
+    BACKUP_BASE="/etc/enigma2"
+    BACKUP_DIR="$BACKUP_BASE/EbroStream.bak.$(date +%Y%m%d_%H%M%S)"
+    
+    # Créer le dossier base si nécessaire
+    mkdir -p "$BACKUP_BASE"
+    
+    print_status "Creating backup in $BACKUP_BASE..."
+    
+    # Déplacer l'ancienne version (plus rapide qu'une copie)
+    if mv "$DEST/EbroStream" "$BACKUP_DIR" 2>/dev/null; then
+        echo -e "${GREEN}  └─ Backup saved to: ${BOLD_WHITE}$BACKUP_DIR${NC}"
+        
+        # Nettoyage automatique : garder seulement les 3 derniers backups
+        OLD_BACKUPS=$(ls -dt "$BACKUP_BASE"/EbroStream.bak.* 2>/dev/null | tail -n +4)
+        if [ -n "$OLD_BACKUPS" ]; then
+            print_status "Cleaning old backups (keeping last 3)..."
+            echo "$OLD_BACKUPS" | while read old_backup; do
+                rm -rf "$old_backup"
+                echo -e "${DIM}  └─ Removed: $(basename "$old_backup")${NC}"
+            done
+            echo -e "${GREEN}  └─ Cleanup completed${NC}"
+        fi
+    else
+        print_error "Backup failed!"
+        echo -e "${YELLOW}  └─ Continuing without backup...${NC}"
+        # Supprimer l'ancienne version pour permettre l'installation
+        rm -rf "$DEST/EbroStream"
+    fi
 fi
 
 # Installation du nouveau plugin
@@ -465,13 +495,13 @@ echo "╠═══════════════════════�
 echo "║                                                                                                                       ║"
 echo -e "║  ${BOLD_YELLOW}✨ EBROSTREAM is now installed and active${NC}                                      ${BOLD_GREEN}   ║"
 echo -e "║  ${BOLD_CYAN}📺 Access the plugin from your Enigma2 menu${NC}                                      ${BOLD_GREEN}   ║"
-echo "║                                                                                                                        
+echo "║                                                                                                                       ║"
 echo -e "║  ${BOLD_WHITE}Developer: ${BOLD_PURPLE}Said-Pro${NC}                                                ${BOLD_GREEN}   ║"
-echo -e "║  ${BOLD_WHITE}Version:   ${BOLD_YELLOW}1.0${NC}                                                    ${BOLD_GREEN}    ║"
-echo "║                                                                                                                        ║"
+echo -e "║  ${BOLD_WHITE}Version:   ${BOLD_YELLOW}1.0${NC}                                                    ${BOLD_GREEN}   ║"
+echo "║                                                                                                                       ║"
 echo -e "║  ${BOLD_BLUE}🐛 Report issues: ${UNDERLINE}https://github.com/Said-Pro/EbroStream/issues${NC}${BOLD_GREEN}          ║"
-echo "║                                                                                                                        ║"
-echo "╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝"
+echo "║                                                                                                                       ║"
+echo "╚═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝"
 echo -e "${NC}"
 
 print_success "Thank you for installing EBROSTREAM!"
