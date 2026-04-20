@@ -136,7 +136,7 @@ echo -e "║              ${BOLD_RED}E B R O S T R E A M${NC}${BOLD_WHITE} - Str
 echo "║                                                                                                                       ║"
 echo "╠═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣"
 echo -e "║  ${BOLD_RED}Developer:${NC} ${BOLD_WHITE}Said-MS${NC}                                               ${BOLD_CYAN} ║"
-echo -e "║  ${BOLD_RED}Version:${NC}   ${BOLD_YELLOW}1.0${NC}                                                  ${BOLD_CYAN} ║"
+echo -e "║  ${BOLD_RED}Version:${NC}   ${BOLD_YELLOW}4.2.0${NC}                                                  ${BOLD_CYAN} ║"
 echo -e "║  ${BOLD_RED}License:${NC}   ${WHITE}MIT${NC}                                                    ${BOLD_CYAN}     ║"
 echo -e "║  ${BOLD_RED}GitHub:${NC}    ${UNDERLINE}https://github.com/Said-Pro/EbroStream${NC}${BOLD_CYAN}                  ║"
 echo "╚═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝"
@@ -153,7 +153,7 @@ echo ""
 #                                                                ÉTAPE 1: Vérification internet
 # ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
 
-print_step "1/8"
+print_step "1/7"
 print_header_section "🌐 Network Connectivity Check"
 
 print_status "Checking internet connection..."
@@ -161,11 +161,6 @@ loading_animation "Testing connection to GitHub" 1
 
 if ping -c 2 github.com >/dev/null 2>&1; then
     echo -e "${GREEN}  └─✅ Connection successful${NC}"
-    echo -e "${GREEN}  └─✅ DNS resolution: OK${NC}"
-    PING_TIME=$(ping -c 1 github.com 2>/dev/null | grep 'time=' | cut -d'=' -f4 | cut -d' ' -f1)
-    if [ -n "$PING_TIME" ]; then
-        echo -e "${GREEN}  └─✅ Network latency: ${PING_TIME}${NC}"
-    fi
     print_success "Internet connection is available"
 else
     print_error "No internet connection detected!"
@@ -179,185 +174,151 @@ echo ""
 #                                                                   ÉTAPE 2: Téléchargement
 # ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
 
-print_step "2/8"
+print_step "2/7"
 print_header_section "📥 Downloading EBROSTREAM"
 
 print_status "Fetching latest version from GitHub..."
 echo -e "${DIM}  └─ Source: https://github.com/Said-Pro/EbroStream${NC}"
 echo ""
 
-# Téléchargement simple sans sed (compatible BusyBox)
-print_status "Downloading file..."
-wget -O /tmp/EbroStream_update_v4.2.0.zip https://github.com/Said-Pro/EbroStream/raw/refs/heads/main/EbroStream_update_v4.2.0.zip 2>&1
+# CORRECTION 1: Utiliser la bonne URL pour le ZIP
+ZIP_URL="https://github.com/Said-Pro/EbroStream/raw/main/EbroStream_update_v4.2.0.zip"
+ZIP_FILE="/tmp/EbroStream_update_v4.2.0.zip"
 
-if [ $? -ne 0 ] || [ ! -s /tmp/EbroStream.tar.gz ]; then
-    echo ""
+print_status "Downloading from: ${ZIP_URL}"
+
+# Téléchargement avec wget (plus fiable)
+if command -v wget >/dev/null 2>&1; then
+    wget -O "$ZIP_FILE" "$ZIP_URL" 2>&1
+elif command -v curl >/dev/null 2>&1; then
+    curl -L -o "$ZIP_FILE" "$ZIP_URL"
+else
+    print_error "Neither wget nor curl is available!"
+    exit 1
+fi
+
+# Vérifier si le téléchargement a réussi
+if [ ! -f "$ZIP_FILE" ] || [ ! -s "$ZIP_FILE" ]; then
     print_error "Download failed or file is empty!"
+    echo -e "${YELLOW}  └─ Tried URL: $ZIP_URL${NC}"
     exit 1
 fi
 
 # Afficher la taille du fichier
-FILE_SIZE=$(ls -lh /tmp/EbroStream_update_v4.2.0.zip 2>/dev/null | awk '{print $5}')
-if [ -z "$FILE_SIZE" ]; then
-    FILE_SIZE=$(du -h /tmp/EbroStream_update_v4.2.0.zip 2>/dev/null | cut -f1)
-fi
-if [ -z "$FILE_SIZE" ]; then
-    FILE_SIZE="unknown"
-fi
-
+FILE_SIZE=$(ls -lh "$ZIP_FILE" 2>/dev/null | awk '{print $5}')
 print_success "EBROSTREAM downloaded successfully"
 echo -e "${GREEN}  └─ File size: ${BOLD_WHITE}$FILE_SIZE${NC}"
 echo ""
 
 # ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
-#                                                                 ÉTAPE 3: Extraction
+#                                                                 ÉTAPE 3: Extraction du ZIP
 # ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
 
-print_step "3/8"
+print_step "3/7"
 print_header_section "📦 Archive Extraction"
 
-print_status "Extracting archive in /tmp..."
-cd /tmp || exit 1
+print_status "Extracting ZIP archive in /tmp..."
 
-# Supprimer toute extraction précédente
-rm -rf /tmp/EbroStream 2>/dev/null
+# CORRECTION 2: Utiliser la bonne commande pour extraire un ZIP
+if command -v unzip >/dev/null 2>&1; then
+    unzip -o "$ZIP_FILE" -d /tmp/
+    EXTRACT_RESULT=$?
+elif command -v busybox >/dev/null 2>&1 && busybox --list | grep -q unzip; then
+    busybox unzip -o "$ZIP_FILE" -d /tmp/
+    EXTRACT_RESULT=$?
+else
+    # Alternative avec python si unzip n'est pas disponible
+    print_status "unzip not found, using python fallback..."
+    python3 -c "
+import zipfile
+import os
+with zipfile.ZipFile('$ZIP_FILE', 'r') as zf:
+    zf.extractall('/tmp/')
+" 2>/dev/null
+    EXTRACT_RESULT=$?
+fi
 
-loading_animation "Decompressing files" 1
-tar -xzf EbroStream_update_v4.2.0.zip
-
-if [ $? -ne 0 ]; then
+if [ $EXTRACT_RESULT -ne 0 ]; then
     print_error "Extraction failed!"
     exit 1
 fi
 
 print_success "Archive extracted successfully"
-echo -e "${GREEN}  └─ Location: ${BOLD_WHITE}/tmp/${NC}"
 echo ""
 
 # ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
 #                                                               ÉTAPE 4: Détection et renommage
 # ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
 
-print_step "4/8"
+print_step "4/7"
 print_header_section "🔍 Structure Analysis"
 
 print_status "Detecting extracted folder structure..."
 
-# Cherche tout dossier ou fichier extrait
-EXTRACTED=""
+# Chercher le dossier extrait
+EXTRACTED_DIR=""
 cd /tmp
 
-# Chercher un dossier contenant EbroStream
-for dir in /tmp/*EbroStream*; do
-    if [ -d "$dir" ] && [ "$dir" != "/tmp/*EbroStream*" ]; then
-        EXTRACTED="$dir"
+# Liste des noms possibles
+for possible_dir in EbroStream EbroStream-main EbroStream-master EbroStream-*; do
+    if [ -d "$possible_dir" ]; then
+        EXTRACTED_DIR="$possible_dir"
+        print_status "Found: ${BOLD_WHITE}$EXTRACTED_DIR${NC}"
         break
     fi
 done
 
-# Si aucun dossier trouvé, chercher des fichiers extraits
-if [ -z "$EXTRACTED" ]; then
-    print_warning "No folder found, checking for extracted files..."
+# Si aucun dossier trouvé, chercher les fichiers extraits directement
+if [ -z "$EXTRACTED_DIR" ]; then
+    print_status "No folder found, checking for direct extraction..."
     
-    # Vérifier si des fichiers ont été extraits directement
-    FILE_COUNT=0
-    for item in /tmp/*; do
-        case "$item" in
-            */EbroStream_update_v4.2.0.zip) ;;
-            */EbroStream) ;;
-            *) 
-                if [ -e "$item" ]; then
-                    FILE_COUNT=$((FILE_COUNT + 1))
-                fi
-                ;;
-        esac
-    done
+    # Compter les fichiers Python extraits
+    PY_COUNT=$(find /tmp -maxdepth 1 -name "*.py" -type f 2>/dev/null | wc -l)
     
-    if [ $FILE_COUNT -gt 0 ]; then
-        print_status "Files extracted directly, creating folder structure..."
+    if [ $PY_COUNT -gt 0 ]; then
+        print_status "Files extracted directly, creating folder..."
         mkdir -p /tmp/EbroStream
-        # Déplacer tous les fichiers/dossiers extraits (sauf l'archive)
-        for item in /tmp/*; do
-            case "$item" in
-                */EbroStream.tar.gz) ;;
-                */EbroStream) ;;
-                *)
-                    if [ -e "$item" ]; then
-                        mv "$item" /tmp/EbroStream/ 2>/dev/null
-                    fi
-                    ;;
-            esac
+        # Déplacer tous les fichiers .py et dossiers
+        for item in /tmp/*.py /tmp/*.png /tmp/skins /tmp/web; do
+            if [ -e "$item" ]; then
+                mv "$item" /tmp/EbroStream/ 2>/dev/null
+            fi
         done
-        EXTRACTED="/tmp/EbroStream"
+        EXTRACTED_DIR="EbroStream"
     fi
 fi
 
-# Si toujours rien trouvé, tenter une extraction alternative
-if [ -z "$EXTRACTED" ]; then
-    print_warning "Attempting alternative extraction method..."
-    mkdir -p /tmp/EbroStream
-    tar -xzf EbroStream.tar.gz -C /tmp/EbroStream --strip-components=1 2>/dev/null
-    if [ $? -eq 0 ] && [ -n "$(ls -A /tmp/EbroStream 2>/dev/null)" ]; then
-        EXTRACTED="/tmp/EbroStream"
-    fi
-fi
-
-if [ -z "$EXTRACTED" ]; then
-    print_error "Could not find extracted content in /tmp!"
-    print_error "Archive content preview:"
-    tar -tzf EbroStream_update_v4.2.0.zip 2>/dev/null | head -5
+if [ -z "$EXTRACTED_DIR" ] || [ ! -d "/tmp/$EXTRACTED_DIR" ]; then
+    print_error "Could not find extracted content!"
+    print_error "Content of /tmp:"
+    ls -la /tmp/ | head -20
     exit 1
 fi
 
-print_status "Found: ${BOLD_WHITE}$EXTRACTED${NC}"
-
 # Compter les fichiers extraits
-NB_FILES=$(find "$EXTRACTED" -type f 2>/dev/null | wc -l)
+NB_FILES=$(find "/tmp/$EXTRACTED_DIR" -type f 2>/dev/null | wc -l)
 echo -e "${GREEN}  └─ Files detected: ${BOLD_WHITE}$NB_FILES${NC}"
 
-# Renommer en "EbroStream" si pas déjà correct
-if [ "$EXTRACTED" != "/tmp/EbroStream" ]; then
-    print_status "Renaming folder..."
+# Renommer en "EbroStream" si nécessaire
+if [ "$EXTRACTED_DIR" != "EbroStream" ]; then
+    print_status "Renaming folder to EbroStream..."
     rm -rf /tmp/EbroStream 2>/dev/null
-    mv "$EXTRACTED" "/tmp/EbroStream"
+    mv "/tmp/$EXTRACTED_DIR" "/tmp/EbroStream"
     if [ $? -ne 0 ]; then
         print_error "Rename failed!"
         exit 1
     fi
     echo -e "${GREEN}  └─ Renamed to: ${BOLD_WHITE}/tmp/EbroStream${NC}"
 fi
+
 print_success "Folder structure ready"
 echo ""
 
 # ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
-#                                                              ÉTAPE 5: Vérification du contenu
+#                                                              ÉTAPE 5: Installation
 # ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
 
-print_step "5/8"
-print_header_section "✅ Content Validation"
-
-print_status "Verifying EBROSTREAM content..."
-if [ ! -d "/tmp/EbroStream" ] || [ -z "$(ls -A /tmp/EbroStream)" ]; then
-    print_error "Plugin folder is empty!"
-    exit 1
-fi
-
-# Vérifier les fichiers essentiels
-print_status "Checking essential files..."
-if [ -f "/tmp/EbroStream/plugin.py" ] || [ -f "/tmp/EbroStream/__init__.py" ]; then
-    echo -e "${GREEN}  └─✅ Plugin entry point found${NC}"
-else
-    echo -e "${YELLOW}  └─⚠ No standard plugin file found (may be normal)${NC}"
-fi
-
-print_success "EBROSTREAM content verified"
-echo ""
-
-# ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
-#                                                                   ÉTAPE 6: Installation
-# ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
-
-print_step "6/8"
+print_step "5/7"
 print_header_section "💾 Installation Process"
 
 DEST="/usr/lib/enigma2/python/Plugins/Extensions"
@@ -373,28 +334,21 @@ fi
 mkdir -p "$DEST"
 echo -e "${GREEN}  └─✅ Destination directory ready${NC}"
 
-# ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
-# MODIFICATION IMPORTANTE: Sauvegarde dans /etc/enigma2 au lieu du dossier plugin
-# ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
-
-# Sauvegarde de l'ancienne version si elle existe (dans /etc/enigma2)
+# Sauvegarde de l'ancienne version si elle existe
+BACKUP_DIR=""
 if [ -d "$DEST/EbroStream" ]; then
     print_warning "Previous installation detected!"
     
-    # Dossier de backup dans /etc/enigma2
-    BACKUP_BASE="/etc/enigma2"
+    BACKUP_BASE="/etc/enigma2/EbroStream_backups"
     BACKUP_DIR="$BACKUP_BASE/EbroStream.bak.$(date +%Y%m%d_%H%M%S)"
     
-    # Créer le dossier base si nécessaire
     mkdir -p "$BACKUP_BASE"
-    
     print_status "Creating backup in $BACKUP_BASE..."
     
-    # Déplacer l'ancienne version (plus rapide qu'une copie)
-    if mv "$DEST/EbroStream" "$BACKUP_DIR" 2>/dev/null; then
+    if cp -r "$DEST/EbroStream" "$BACKUP_DIR" 2>/dev/null; then
         echo -e "${GREEN}  └─ Backup saved to: ${BOLD_WHITE}$BACKUP_DIR${NC}"
         
-        # Nettoyage automatique : garder seulement les 3 derniers backups
+        # Nettoyage : garder seulement les 3 derniers backups
         OLD_BACKUPS=$(ls -dt "$BACKUP_BASE"/EbroStream.bak.* 2>/dev/null | tail -n +4)
         if [ -n "$OLD_BACKUPS" ]; then
             print_status "Cleaning old backups (keeping last 3)..."
@@ -402,26 +356,27 @@ if [ -d "$DEST/EbroStream" ]; then
                 rm -rf "$old_backup"
                 echo -e "${DIM}  └─ Removed: $(basename "$old_backup")${NC}"
             done
-            echo -e "${GREEN}  └─ Cleanup completed${NC}"
         fi
     else
-        print_error "Backup failed!"
-        echo -e "${YELLOW}  └─ Continuing without backup...${NC}"
-        # Supprimer l'ancienne version pour permettre l'installation
-        rm -rf "$DEST/EbroStream"
+        print_warning "Backup failed, continuing without backup..."
     fi
+    
+    # Supprimer l'ancienne version
+    rm -rf "$DEST/EbroStream"
 fi
 
 # Installation du nouveau plugin
 print_status "Installing EBROSTREAM..."
 loading_animation "Copying files" 1
-mv "/tmp/EbroStream" "$DEST/"
+
+# Copier les fichiers (pas mv pour garder une copie dans /tmp)
+cp -rf "/tmp/EbroStream" "$DEST/"
 
 if [ $? -ne 0 ]; then
-    print_error "Transfer to plugins directory failed!"
+    print_error "Copy to plugins directory failed!"
     # Restaurer la sauvegarde si l'installation échoue
-    if [ -d "$BACKUP_DIR" ]; then
-        mv "$BACKUP_DIR" "$DEST/EbroStream"
+    if [ -n "$BACKUP_DIR" ] && [ -d "$BACKUP_DIR" ]; then
+        cp -rf "$BACKUP_DIR" "$DEST/EbroStream"
         print_warning "Old version restored"
     fi
     exit 1
@@ -432,24 +387,51 @@ echo -e "${GREEN}  └─ Location: ${BOLD_WHITE}$DEST/EbroStream${NC}"
 echo ""
 
 # ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
-#                                                              ÉTAPE 7: Nettoyage
+#                                                              ÉTAPE 6: Nettoyage complet
 # ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
 
-print_step "7/8"
-print_header_section "🧹 Cleanup"
+print_step "6/7"
+print_header_section "🧹 Complete Cleanup"
 
-print_status "Removing temporary files..."
-rm -f /tmp/EbroStream_update_v4.2.0.zip
-rm -rf /tmp/EbroStream 2>/dev/null
-print_success "Temporary files removed"
+print_status "Removing all temporary files from /tmp..."
+
+# Supprimer le fichier ZIP
+if [ -f "/tmp/EbroStream_update_v4.2.0.zip" ]; then
+    rm -f "/tmp/EbroStream_update_v4.2.0.zip"
+    echo -e "${GREEN}  └─ Removed: EbroStream_update_v4.2.0.zip${NC}"
+fi
+
+# Supprimer le dossier extrait
+if [ -d "/tmp/EbroStream" ]; then
+    rm -rf "/tmp/EbroStream"
+    echo -e "${GREEN}  └─ Removed: /tmp/EbroStream folder${NC}"
+fi
+
+# Supprimer d'éventuels restes
+for leftover in /tmp/EbroStream-main /tmp/EbroStream-master /tmp/EbroStream-*; do
+    if [ -d "$leftover" ] && [ "$leftover" != "/tmp/EbroStream-*" ]; then
+        rm -rf "$leftover"
+        echo -e "${GREEN}  └─ Removed: $(basename "$leftover")${NC}"
+    fi
+done
+
+# Nettoyer les fichiers .py temporaires éventuels
+find /tmp -maxdepth 1 -name "*.py" -type f 2>/dev/null | while read pyfile; do
+    if [ -f "$pyfile" ]; then
+        rm -f "$pyfile"
+        echo -e "${GREEN}  └─ Removed: $(basename "$pyfile")${NC}"
+    fi
+done
+
+print_success "All temporary files removed"
 echo -e "${GREEN}  └─ Space reclaimed: ${BOLD_WHITE}$FILE_SIZE${NC}"
 echo ""
 
 # ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
-#                                                                        ÉTAPE 8: Redémarrage
+#                                                                        ÉTAPE 7: Redémarrage
 # ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
 
-print_step "8/8"
+print_step "7/7"
 print_header_section "🔄 System Restart"
 
 echo ""
@@ -463,17 +445,16 @@ echo ""
 # Barre de progression avant redémarrage
 progress_bar 3
 
-# Redémarrage plus robuste
+# Redémarrage d'Enigma2
+print_status "Restarting Enigma2..."
+
 if command -v init >/dev/null 2>&1; then
-    print_status "Restarting Enigma2 via init..."
     init 4
     sleep 2
     init 3
 elif command -v systemctl >/dev/null 2>&1; then
-    print_status "Restarting Enigma2 via systemctl..."
     systemctl restart enigma2
 elif [ -f /etc/init.d/enigma2 ]; then
-    print_status "Restarting Enigma2 via init.d..."
     /etc/init.d/enigma2 restart
 else
     print_warning "Cannot restart automatically. Please restart manually."
@@ -497,7 +478,7 @@ echo -e "║  ${BOLD_YELLOW}✨ EBROSTREAM is now installed and active${NC}     
 echo -e "║  ${BOLD_CYAN}📺 Access the plugin from your Enigma2 menu${NC}                                      ${BOLD_GREEN}   ║"
 echo "║                                                                                                                       ║"
 echo -e "║  ${BOLD_WHITE}Developer: ${BOLD_PURPLE}Said-Pro${NC}                                                ${BOLD_GREEN}   ║"
-echo -e "║  ${BOLD_WHITE}Version:   ${BOLD_YELLOW}1.0${NC}                                                    ${BOLD_GREEN}   ║"
+echo -e "║  ${BOLD_WHITE}Version:   ${BOLD_YELLOW}4.2.0${NC}                                                    ${BOLD_GREEN}   ║"
 echo "║                                                                                                                       ║"
 echo -e "║  ${BOLD_BLUE}🐛 Report issues: ${UNDERLINE}https://github.com/Said-Pro/EbroStream/issues${NC}${BOLD_GREEN}          ║"
 echo "║                                                                                                                       ║"
