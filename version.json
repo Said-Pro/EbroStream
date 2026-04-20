@@ -1,13 +1,22 @@
 {
-    "version": "4.1.0",           // Nouvelle version (incrémentée)
-    "release_date": "2026-04-20", // Date de publication
-    "size": "2.5 MB",              // Taille approximative
-    "requires_restart": true,      // Redémarrage nécessaire ?
-    "changelog": [                 // Liste des changements
-        "Ajout du support du format m3u",
-        "Correction du bug de lecture VOD",
-        "Amélioration des performances du cache"
+    "version": "4.2.0",
+    "min_version": "4.0.0",
+    "release_date": "2026-04-20",
+    "download_url": "https://github.com/votre-username/EbroStream/releases/download/v4.2.0/ebrostream_update.zip",
+    "changelog": [
+        "✅ Ajout de l'interface web pour la gestion des serveurs",
+        "✅ Correction du bug d'affichage des chaînes VOD",
+        "✅ Amélioration des performances du lecteur",
+        "🔧 Fix mineurs"
     ],
-    "min_version": "4.0.0",        // Version minimale requise
-    "download_url": "https://github.com/votre-username/EbroStream/archive/refs/heads/main.zip"
+    "files": [
+        "main.py",
+        "live.py", 
+        "vod.py",
+        "series.py",
+        "servers_list.py",
+        "server_manager.py",
+        "web/api.py",
+        "web/index.html"
+    ]
 }
