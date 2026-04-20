@@ -2,7 +2,7 @@
     "version": "4.2.0",
     "min_version": "4.0.0",
     "release_date": "2026-04-20",
-    "download_url": "https://github.com/votre-username/EbroStream/releases/download/v4.2.0/ebrostream_update_v4.2.0.zip",
+    "download_url": "https://github.com/Said-Pro/EbroStream/releases/download/v4.2.0/ebrostream_update_v4.2.0.zip",
     "changelog": [
         "✅ Ajout de l'interface web pour la gestion des serveurs",
         "✅ Bouton UPDATE dans l'interface principale",
