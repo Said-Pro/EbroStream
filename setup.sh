@@ -188,7 +188,7 @@ echo ""
 
 # Téléchargement simple sans sed (compatible BusyBox)
 print_status "Downloading file..."
-wget -O /tmp/EbroStream.tar.gz https://github.com/Said-Pro/EbroStream/raw/refs/heads/main/EbroStream.tar.gz 2>&1
+wget -O /tmp/EbroStream_update_v4.2.0.zip https://github.com/Said-Pro/EbroStream/raw/refs/heads/main/EbroStream_update_v4.2.0.zip 2>&1
 
 if [ $? -ne 0 ] || [ ! -s /tmp/EbroStream.tar.gz ]; then
     echo ""
@@ -197,9 +197,9 @@ if [ $? -ne 0 ] || [ ! -s /tmp/EbroStream.tar.gz ]; then
 fi
 
 # Afficher la taille du fichier
-FILE_SIZE=$(ls -lh /tmp/EbroStream.tar.gz 2>/dev/null | awk '{print $5}')
+FILE_SIZE=$(ls -lh /tmp/EbroStream_update_v4.2.0.zip 2>/dev/null | awk '{print $5}')
 if [ -z "$FILE_SIZE" ]; then
-    FILE_SIZE=$(du -h /tmp/EbroStream.tar.gz 2>/dev/null | cut -f1)
+    FILE_SIZE=$(du -h /tmp/EbroStream_update_v4.2.0.zip 2>/dev/null | cut -f1)
 fi
 if [ -z "$FILE_SIZE" ]; then
     FILE_SIZE="unknown"
@@ -223,7 +223,7 @@ cd /tmp || exit 1
 rm -rf /tmp/EbroStream 2>/dev/null
 
 loading_animation "Decompressing files" 1
-tar -xzf EbroStream.tar.gz
+tar -xzf EbroStream_update_v4.2.0.zip
 
 if [ $? -ne 0 ]; then
     print_error "Extraction failed!"
@@ -263,7 +263,7 @@ if [ -z "$EXTRACTED" ]; then
     FILE_COUNT=0
     for item in /tmp/*; do
         case "$item" in
-            */EbroStream.tar.gz) ;;
+            */EbroStream_update_v4.2.0.zip) ;;
             */EbroStream) ;;
             *) 
                 if [ -e "$item" ]; then
@@ -305,7 +305,7 @@ fi
 if [ -z "$EXTRACTED" ]; then
     print_error "Could not find extracted content in /tmp!"
     print_error "Archive content preview:"
-    tar -tzf EbroStream.tar.gz 2>/dev/null | head -5
+    tar -tzf EbroStream_update_v4.2.0.zip 2>/dev/null | head -5
     exit 1
 fi
 
@@ -439,7 +439,7 @@ print_step "7/8"
 print_header_section "🧹 Cleanup"
 
 print_status "Removing temporary files..."
-rm -f /tmp/EbroStream.tar.gz
+rm -f /tmp/EbroStream_update_v4.2.0.zip
 rm -rf /tmp/EbroStream 2>/dev/null
 print_success "Temporary files removed"
 echo -e "${GREEN}  └─ Space reclaimed: ${BOLD_WHITE}$FILE_SIZE${NC}"
