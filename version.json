@@ -1,14 +1,31 @@
 {
-    "version": "4.2.0",
+    "version": "4.2.1",
     "min_version": "4.0.0",
-    "release_date": "2026-04-20",
-    "download_url": "https://github.com/Said-Pro/EbroStream/releases/download/v4.2.0/ebrostream_update_v4.2.0.zip",
+    "release_date": "2026-04-21",
+    "download_url": "https://github.com/Said-Pro/EbroStream/releases/download/v4.2.1/ebrostream_update_v4.2.1.zip",
     "changelog": [
-        "✅ Ajout de l'interface web pour la gestion des serveurs",
-        "✅ Bouton UPDATE dans l'interface principale",
-        "✅ Système de mise à jour automatique",
-        "✅ Correction du bug d'affichage des chaînes VOD",
-        "✅ Amélioration des performances"
+        "✅ Correction de la structure des dossiers (images dans skins/)",
+        "✅ Interface web fonctionnelle",
+        "✅ Bouton UPDATE dans l'interface principale"
     ],
-    "files_count": 15
+    "files": [
+        "__init__.py",
+        "main.py",
+        "live.py",
+        "vod.py",
+        "series.py",
+        "servers_list.py",
+        "server_manager.py",
+        "stalker_servers.py",
+        "xtream_servers.py",
+        "settings.py",
+        "SettingsScreen.py",
+        "settings_menu.py",
+        "tools.py",
+        "updater.py",
+        "version.json",
+        "plugin.py",
+        "skins/",
+        "web/"
+    ]
 }
