@@ -85,7 +85,7 @@ echo -e "║              ${BOLD_RED}E B R O S T R E A M${NC}${BOLD_WHITE} - Str
 echo "║                                                                                                                       ║"
 echo "╠═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣"
 echo -e "║  ${BOLD_RED}Developer:${NC} ${BOLD_WHITE}Said-MS${NC}                                               ${BOLD_CYAN} ║"
-echo -e "║  ${BOLD_RED}Version:${NC}   ${BOLD_YELLOW}4.2.0${NC}                                                  ${BOLD_CYAN} ║"
+echo -e "║  ${BOLD_RED}Version:${NC}   ${BOLD_YELLOW}4.2.1${NC}                                                  ${BOLD_CYAN} ║"
 echo -e "║  ${BOLD_RED}GitHub:${NC}    ${UNDERLINE}https://github.com/Said-Pro/EbroStream${NC}${BOLD_CYAN}                  ║"
 echo "╚═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝"
 echo -e "${NC}"
@@ -118,7 +118,7 @@ print_step "2/5"
 print_status "Downloading EBROSTREAM from GitHub..."
 
 ZIP_FILE="/tmp/EbroStream_update.zip"
-ZIP_URL="https://github.com/Said-Pro/EbroStream/raw/main/EbroStream_update_v4.2.0.zip"
+ZIP_URL="https://github.com/Said-Pro/EbroStream/raw/main/EbroStream_update_v4.2.1.zip"
 
 # Nettoyer les anciens fichiers
 rm -f "$ZIP_FILE"
