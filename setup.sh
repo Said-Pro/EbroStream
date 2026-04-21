@@ -118,7 +118,7 @@ print_step "2/5"
 print_status "Downloading EBROSTREAM from GitHub..."
 
 ZIP_FILE="/tmp/EbroStream_update.zip"
-ZIP_URL="https://github.com/Said-Pro/EbroStream/raw/main/EbroStream_update_v4.2.1.zip"
+ZIP_URL="https://github.com/Said-Pro/EbroStream/raw/refs/heads/main/EbroStream_update_v4.2.1.zip"
 
 # Nettoyer les anciens fichiers
 rm -f "$ZIP_FILE"
