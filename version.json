@@ -1,11 +1,11 @@
-# 1. Créer la release
-gh release create v4.2.2 \
-    --repo Said-Pro/EbroStream \
-    --title "Version 4.2.2" \
-    --notes "🎨 Bouton UPDATE passé en VERT
-✅ Améliorations des performances
-🔧 Corrections mineures" \
-    /chemin/vers/EbroStream_update_v4.2.2.zip
-
-# 2. Mettre à jour version.json sur la branche main
-# (faire via l'interface web ou directement)
+{
+    "version": "4.2.2",
+    "min_version": "4.0.0",
+    "release_date": "2026-04-21",
+    "download_url": "https://github.com/Said-Pro/EbroStream/releases/download/v4.2.2/ebrostream_update_v4.2.2.zip",
+    "changelog": [
+        "🎨 Bouton UPDATE passé en VERT",
+        "✅ Améliorations des performances",
+        "🔧 Corrections mineures"
+    ]
+}
