@@ -1,12 +1,9 @@
-# 1. Créer le ZIP pour la version 4.2.1
-cd /usr/lib/enigma2/python/Plugins/Extensions
-zip -r ebrostream_update_v4.2.1.zip EbroStream/
-
-# 2. Créer la release sur GitHub
-gh release create v4.2.1 \
-    --repo Said-Pro/EbroStream \
-    --title "Version 4.2.1" \
-    --notes "✅ Correction structure dossiers
-✅ Interface web fonctionnelle
-✅ Bouton UPDATE" \
-    ebrostream_update_v4.2.1.zip
+{
+    "version": "4.2.0",
+    "min_version": "4.0.0",
+    "release_date": "2026-04-21",
+    "download_url": "https://github.com/Said-Pro/EbroStream/releases/download/v4.2.0/ebrostream_update_v4.2.0.zip",
+    "changelog": [
+        "✅ Interface web fonctionnelle"
+    ]
+}
