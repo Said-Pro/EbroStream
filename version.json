@@ -1,12 +1,7 @@
 {
-    "version": "4.2.3",
-    "download_url": "https://github.com/Said-Pro/EbroStream/raw/main/EbroStream_update_v4.2.3.tar.gz",
+    "version": "4.2.4",
+    "download_url": "https://github.com/Said-Pro/EbroStream/raw/main/EbroStream_update_v4.2.4.tar.gz",
     "changelog": [
-        "Correction des mises à jour OTA",
-        "Support amélioré SSL",
-        "Compatibilité étendue",
-        "Modification StalkerScreen et XtreamScreen",
-        "Activer la conexion via web",
-        "Rectifier la conexion via web"
+        "Rectifier la commande Supprimer sur la conexion via web  by Karim"
     ]
 }
