@@ -136,7 +136,7 @@ echo -e "║              ${BOLD_RED}E B R O S T R E A M${NC}${BOLD_WHITE} - Str
 echo "║                                                                                                                       ║"
 echo "╠═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣"
 echo -e "║  ${BOLD_RED}Developer:${NC} ${BOLD_WHITE}Said-MS${NC}                                               ${BOLD_CYAN} ║"
-echo -e "║  ${BOLD_RED}Version:${NC}   ${BOLD_YELLOW}4.2.4${NC}                                                ${BOLD_CYAN} ║"
+echo -e "║  ${BOLD_RED}Version:${NC}   ${BOLD_YELLOW}4.2.5${NC}                                                ${BOLD_CYAN} ║"
 echo -e "║  ${BOLD_RED}License:${NC}   ${WHITE}MIT${NC}                                                    ${BOLD_CYAN}     ║"
 echo -e "║  ${BOLD_RED}GitHub:${NC}    ${UNDERLINE}https://github.com/Said-Pro/EbroStream${NC}${BOLD_CYAN}                  ║"
 echo "╚═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝"
@@ -146,7 +146,7 @@ echo -e "${NC}"
 loading_animation "Initializing EBROSTREAM installer" 2
 
 echo ""
-print_decorative "🚀 Starting installation process for EBROSTREAM v4.2.4"
+print_decorative "🚀 Starting installation process for EBROSTREAM v4.2.5"
 echo ""
 
 # ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
@@ -180,7 +180,7 @@ echo ""
 # ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
 
 print_step "2/8"
-print_header_section "📥 Downloading EBROSTREAM v4.2.4"
+print_header_section "📥 Downloading EBROSTREAM v4.2.5"
 
 print_status "Fetching latest version from GitHub..."
 echo -e "${DIM}  └─ Source: https://github.com/Said-Pro/EbroStream${NC}"
@@ -188,24 +188,24 @@ echo ""
 
 # Téléchargement simple sans sed (compatible BusyBox)
 print_status "Downloading file..."
-wget -O /tmp/EbroStream_update_v4.2.4.tar.gz https://github.com/Said-Pro/EbroStream/raw/refs/heads/main/EbroStream_update_v4.2.4.tar.gz 2>&1
+wget -O /tmp/EbroStream_update_v4.2.5.tar.gz https://github.com/Said-Pro/EbroStream/raw/refs/heads/main/EbroStream_update_v4.2.5.tar.gz 2>&1
 
-if [ $? -ne 0 ] || [ ! -s /tmp/EbroStream_update_v4.2.4.tar.gz ]; then
+if [ $? -ne 0 ] || [ ! -s /tmp/EbroStream_update_v4.2.5.tar.gz ]; then
     echo ""
     print_error "Download failed or file is empty!"
     exit 1
 fi
 
 # Afficher la taille du fichier
-FILE_SIZE=$(ls -lh /tmp/EbroStream_update_v4.2.4.tar.gz 2>/dev/null | awk '{print $5}')
+FILE_SIZE=$(ls -lh /tmp/EbroStream_update_v4.2.5.tar.gz 2>/dev/null | awk '{print $5}')
 if [ -z "$FILE_SIZE" ]; then
-    FILE_SIZE=$(du -h /tmp/EbroStream_update_v4.2.4.tar.gz 2>/dev/null | cut -f1)
+    FILE_SIZE=$(du -h /tmp/EbroStream_update_v4.2.5.tar.gz 2>/dev/null | cut -f1)
 fi
 if [ -z "$FILE_SIZE" ]; then
     FILE_SIZE="unknown"
 fi
 
-print_success "EBROSTREAM v4.2.4 downloaded successfully"
+print_success "EBROSTREAM v4.2.5 downloaded successfully"
 echo -e "${GREEN}  └─ File size: ${BOLD_WHITE}$FILE_SIZE${NC}"
 echo ""
 
@@ -223,7 +223,7 @@ cd /tmp || exit 1
 rm -rf /tmp/EbroStream 2>/dev/null
 
 loading_animation "Decompressing files" 1
-tar -xzf EbroStream_update_v4.2.4.tar.gz
+tar -xzf EbroStream_update_v4.2.5.tar.gz
 
 if [ $? -ne 0 ]; then
     print_error "Extraction failed!"
@@ -263,7 +263,7 @@ if [ -z "$EXTRACTED" ]; then
     FILE_COUNT=0
     for item in /tmp/*; do
         case "$item" in
-            */EbroStream_update_v4.2.4.tar.gz) ;;
+            */EbroStream_update_v4.2.5.tar.gz) ;;
             */EbroStream) ;;
             *) 
                 if [ -e "$item" ]; then
@@ -279,7 +279,7 @@ if [ -z "$EXTRACTED" ]; then
         # Déplacer tous les fichiers/dossiers extraits (sauf l'archive)
         for item in /tmp/*; do
             case "$item" in
-                */EbroStream_update_v4.2.4.tar.gz) ;;
+                */EbroStream_update_v4.2.5.tar.gz) ;;
                 */EbroStream) ;;
                 *)
                     if [ -e "$item" ]; then
@@ -296,7 +296,7 @@ fi
 if [ -z "$EXTRACTED" ]; then
     print_warning "Attempting alternative extraction method..."
     mkdir -p /tmp/EbroStream
-    tar -xzf EbroStream_update_v4.2.4.tar.gz -C /tmp/EbroStream --strip-components=1 2>/dev/null
+    tar -xzf EbroStream_update_v4.2.5.tar.gz -C /tmp/EbroStream --strip-components=1 2>/dev/null
     if [ $? -eq 0 ] && [ -n "$(ls -A /tmp/EbroStream 2>/dev/null)" ]; then
         EXTRACTED="/tmp/EbroStream"
     fi
@@ -305,7 +305,7 @@ fi
 if [ -z "$EXTRACTED" ]; then
     print_error "Could not find extracted content in /tmp!"
     print_error "Archive content preview:"
-    tar -tzf EbroStream_update_v4.2.4.tar.gz 2>/dev/null | head -5
+    tar -tzf EbroStream_update_v4.2.5.tar.gz 2>/dev/null | head -5
     exit 1
 fi
 
@@ -413,7 +413,7 @@ if [ -d "$DEST/EbroStream" ]; then
 fi
 
 # Installation du nouveau plugin
-print_status "Installing EBROSTREAM v4.2.4..."
+print_status "Installing EBROSTREAM v4.2.5..."
 loading_animation "Copying files" 1
 mv "/tmp/EbroStream" "$DEST/"
 
@@ -427,7 +427,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-print_success "EBROSTREAM v4.2.4 installed successfully!"
+print_success "EBROSTREAM v4.2.5 installed successfully!"
 echo -e "${GREEN}  └─ Location: ${BOLD_WHITE}$DEST/EbroStream${NC}"
 echo ""
 
@@ -439,7 +439,7 @@ print_step "7/8"
 print_header_section "🧹 Cleanup"
 
 print_status "Removing temporary files..."
-rm -f /tmp/EbroStream_update_v4.2.4.tar.gz
+rm -f /tmp/EbroStream_update_v4.2.5.tar.gz
 rm -rf /tmp/EbroStream 2>/dev/null
 print_success "Temporary files removed"
 echo -e "${GREEN}  └─ Space reclaimed: ${BOLD_WHITE}$FILE_SIZE${NC}"
@@ -453,7 +453,7 @@ print_step "8/8"
 print_header_section "🔄 System Restart"
 
 echo ""
-print_box "EBROSTREAM v4.2.4" "Plugin successfully installed! Enjoy streaming ✨"
+print_box "EBROSTREAM v4.2.5" "Plugin successfully installed! Enjoy streaming ✨"
 echo ""
 
 print_warning "The receiver will restart to apply changes"
@@ -493,16 +493,16 @@ echo "║                                           ✅ INSTALLATION COMPLETED S
 echo "║                                                                                                                       ║"
 echo "╠═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣"
 echo "║                                                                                                                       ║"
-echo -e "║  ${BOLD_YELLOW}✨ EBROSTREAM v4.2.4 is now installed and active${NC}                                ${BOLD_GREEN}   ║"
+echo -e "║  ${BOLD_YELLOW}✨ EBROSTREAM v4.2.5 is now installed and active${NC}                                ${BOLD_GREEN}   ║"
 echo -e "║  ${BOLD_CYAN}📺 Access the plugin from your Enigma2 menu${NC}                                      ${BOLD_GREEN}   ║"
 echo "║                                                                                                                       ║"
 echo -e "║  ${BOLD_WHITE}Developer: ${BOLD_PURPLE}Said-Pro${NC}                                                ${BOLD_GREEN}   ║"
-echo -e "║  ${BOLD_WHITE}Version:   ${BOLD_YELLOW}4.2.4${NC}                                                  ${BOLD_GREEN}   ║"
+echo -e "║  ${BOLD_WHITE}Version:   ${BOLD_YELLOW}4.2.5${NC}                                                  ${BOLD_GREEN}   ║"
 echo "║                                                                                                                       ║"
 echo -e "║  ${BOLD_BLUE}🐛 Report issues: ${UNDERLINE}https://github.com/Said-Pro/EbroStream/issues${NC}${BOLD_GREEN}          ║"
 echo "║                                                                                                                       ║"
 echo "╚═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝"
 echo -e "${NC}"
 
-print_success "Thank you for installing EBROSTREAM v4.2.4!"
+print_success "Thank you for installing EBROSTREAM v4.2.5!"
 echo ""
