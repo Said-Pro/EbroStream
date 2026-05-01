@@ -1,7 +1,7 @@
 {
-    "version": "4.2.5",
-    "download_url": "https://github.com/Said-Pro/EbroStream/raw/main/EbroStream_update_v4.2.5.tar.gz",
+    "version": "4.2.6",
+    "download_url": "https://github.com/Said-Pro/EbroStream/raw/main/EbroStream_update_v4.2.6.tar.gz",
     "changelog": [
-        "Completer l`affichage et la lecture SERIES du serveur Stalker b  by Karim"
+        "Ajuster les boutons suivant les couleurs des touches de la tèlècommande  by Saïd M.S"
     ]
 }
